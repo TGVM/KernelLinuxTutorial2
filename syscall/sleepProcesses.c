@@ -2,9 +2,9 @@
 #include <linux/init.h>
 #include <linux/sched.h>
 #include <linux/syscalls.h>
-#include "sleepProcessess.h"
+#include "sleepProcesses.h"
   
-asmlinkage long sys_listSleepProcessess(const char __user *buf, int size) {
+asmlinkage long sys_listSleepProcesses(const char __user *buf, int size) {
 	struct task_struct *proces;
 	unsigned char kbuf[256];
 	int bufsz;
