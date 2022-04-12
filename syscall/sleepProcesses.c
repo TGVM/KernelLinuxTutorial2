@@ -6,7 +6,7 @@
   
 asmlinkage long sys_listSleepProcesses(const char __user *buf, int size) {
 	struct task_struct *proces;
-	unsigned char kbuf[256];
+	unsigned char kbuf[1024];
 	int bufsz;
 	int ret;
 
@@ -15,13 +15,11 @@ asmlinkage long sys_listSleepProcesses(const char __user *buf, int size) {
 
 	/* Find the process */
 	for_each_process(proces) {
-		if( proces->state == 2 || proces->state == 1){
-			/* Print the process info to the buffer */
-			snprintf(kbuf, sizeof(kbuf), "Process: %s\n PID_Number: %ld\n", 
-					proces->comm, 
-					(long)task_pid_nr(proces));
-			bufsz += strlen(kbuf)+1;
+		if(proces->state == TASK_INTERRUPTIBLE || proces->state == TASK_UNINTERRUPTIBLE) {
+			kbuf[index] = (long)task_pid_nr(proces);
+			index = index + 1;
 		}
+	}
 	}
 	/* User buffer is too small */
 	if(bufsz > size){
